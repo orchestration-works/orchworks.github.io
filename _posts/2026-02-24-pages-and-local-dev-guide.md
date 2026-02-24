@@ -60,7 +60,14 @@ Ruby 버전은 아래 파일들에서 맞춰주세요. (26/02/24 기준 `3.3.10`
 
 Ruby 설치가 끝나면 뜨는 창(기본적으로 `ridk install`)에서 **1, 2, 3을 각각 한 번씩 선택**해서 진행합니다.
 
-### 1.3 번들 설치
+### 1.3 소스 받기
+
+```bash
+git clone https://github.com/orchestration-works/orchworks.github.io.git
+cd orchworks.github.io
+```
+
+### 1.4 번들 설치
 
 PowerShell(또는 CMD)에서 레포 루트로 이동 후 실행:
 
