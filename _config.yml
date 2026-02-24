@@ -209,6 +209,9 @@ compress_html:
 exclude:
   - "*.gem"
   - "*.gemspec"
+  - about.markdown
+  - index.markdown
+  - assets/404.html
   - docs
   - tools
   - README.md

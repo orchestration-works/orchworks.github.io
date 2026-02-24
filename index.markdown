@@ -1,6 +1,4 @@
----
-# Feel free to add content and custom Front Matter to this file.
-# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
-
-layout: home
----
+<!--
+	NOTE: Intentionally not a Jekyll page.
+	The home page is generated from /index.html.
+-->
