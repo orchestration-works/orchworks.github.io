@@ -12,6 +12,35 @@
         <!-- index page -->
         <span>{{ site.data.locales[include.lang].tabs.home | capitalize }}</span>
 
+      {% elsif page.layout == 'category' and page.cat_path %}
+        <!-- n-depth category: Home > Categories > A > B > ... -->
+        <span>
+          <a href="{{ '/' | relative_url }}">
+            {{- site.data.locales[include.lang].tabs.home | capitalize -}}
+          </a>
+        </span>
+        <span>
+          <a href="{{ '/categories/' | relative_url }}">
+            {{- site.data.locales[include.lang].tabs.categories | default: 'Categories' | capitalize -}}
+          </a>
+        </span>
+        {% assign _crumb = '' %}
+        {% for seg in page.cat_path %}
+          {% assign _seg_slug = page.cat_slug_path[forloop.index0] %}
+          {% if _crumb == '' %}
+            {% assign _crumb = _seg_slug %}
+          {% else %}
+            {% assign _crumb = _crumb | append: '/' | append: _seg_slug %}
+          {% endif %}
+          {% if forloop.last %}
+            <span>{{ seg }}</span>
+          {% else %}
+            <span>
+              <a href="{{ '/categories/' | append: _crumb | append: '/' | relative_url }}">{{ seg }}</a>
+            </span>
+          {% endif %}
+        {% endfor %}
+
       {% else %}
         {% for item in paths %}
           {% if forloop.first %}

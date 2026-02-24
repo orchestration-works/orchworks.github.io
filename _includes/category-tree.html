@@ -1,0 +1,84 @@
+{% comment %}
+  Recursive n-depth category tree renderer.
+  Parameters:
+    nodes – array of { name, slug, count, children[] }
+    path  – slug path accumulated so far (e.g. "collaborate/01-orchworks")
+    depth – current nesting depth (0 = root)
+{% endcomment %}
+
+{% assign HEAD_PREFIX = 'h_' %}
+{% assign LIST_PREFIX = 'l_' %}
+
+{% for node in include.nodes %}
+  {% if include.path == '' %}
+    {% assign node_path = node.slug %}
+  {% else %}
+    {% assign node_path = include.path | append: '/' | append: node.slug %}
+  {% endif %}
+
+  {% assign has_children = false %}
+  {% if node.children.size > 0 %}
+    {% assign has_children = true %}
+  {% endif %}
+
+  {% assign uid = node_path | replace: '/', '-' %}
+
+  <div class="card categories" style="margin-left: {{ include.depth | times: 1.5 }}rem;">
+    <div
+      id="{{ HEAD_PREFIX }}{{ uid }}"
+      class="card-header d-flex justify-content-between{% if has_children %} hide-border-bottom{% endif %}"
+    >
+      <span class="ms-2">
+        <i class="far fa-folder{% if has_children %}-open{% endif %} fa-fw"></i>
+
+        <a href="{{ '/categories/' | append: node_path | append: '/' | relative_url }}" class="mx-2">
+          {{ node.name }}
+        </a>
+
+        <span class="text-muted small font-weight-light">
+          {% if has_children %}
+            {{ node.children.size }}
+            {% if node.children.size > 1 %}
+              {{ site.data.locales[lang].categories.category_measure.plural
+                 | default: site.data.locales[lang].categories.category_measure }}
+            {% else %}
+              {{ site.data.locales[lang].categories.category_measure.singular
+                 | default: site.data.locales[lang].categories.category_measure }}
+            {% endif %},
+          {% endif %}
+          {{ node.count }}
+          {% if node.count > 1 %}
+            {{ site.data.locales[lang].categories.post_measure.plural
+               | default: site.data.locales[lang].categories.post_measure }}
+          {% else %}
+            {{ site.data.locales[lang].categories.post_measure.singular
+               | default: site.data.locales[lang].categories.post_measure }}
+          {% endif %}
+        </span>
+      </span>
+
+      {% if has_children %}
+        <a
+          href="#{{ LIST_PREFIX }}{{ uid }}"
+          data-bs-toggle="collapse"
+          aria-expanded="true"
+          aria-label="{{ HEAD_PREFIX }}{{ uid }}-trigger"
+          class="category-trigger hide-border-bottom"
+        >
+          <i class="fas fa-fw fa-angle-down"></i>
+        </a>
+      {% else %}
+        <span data-bs-toggle="collapse" class="category-trigger hide-border-bottom disabled">
+          <i class="fas fa-fw fa-angle-right"></i>
+        </span>
+      {% endif %}
+    </div>
+
+    {% if has_children %}
+      <div id="{{ LIST_PREFIX }}{{ uid }}" class="collapse show" aria-expanded="true">
+        {% assign next_depth = include.depth | plus: 1 %}
+        {% include category-tree.html nodes=node.children path=node_path depth=next_depth %}
+      </div>
+    {% endif %}
+  </div>
+{% endfor %}

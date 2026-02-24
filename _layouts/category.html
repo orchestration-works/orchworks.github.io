@@ -1,24 +1,51 @@
 ---
 layout: page
-# The Category layout
+# The Category layout — n-depth aware
 ---
 
 {% include lang.html %}
 
 <div id="page-category">
+
   <h1 class="ps-lg-2">
     <i class="far fa-folder-open fa-fw text-muted"></i>
     {{ page.title }}
     <span class="lead text-muted ps-2">{{ page.posts | size }}</span>
   </h1>
 
-  <ul class="content ps-0">
-    {% for post in page.posts %}
-      <li class="d-flex justify-content-between px-md-3">
-        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        <span class="dash flex-grow-1"></span>
-        {% include datetime.html date=post.date class='text-muted small text-nowrap' lang=lang %}
-      </li>
-    {% endfor %}
-  </ul>
+  <!-- ── Child categories ── -->
+  {% if page.children.size > 0 %}
+    <div class="card categories mb-4">
+      <div class="card-header">
+        <i class="far fa-folder-open fa-fw"></i>
+        <span class="ms-1 fw-semibold">Sub-categories</span>
+      </div>
+      <ul class="list-group list-group-flush">
+        {% assign base_slug = page.cat_slug_path | join: '/' %}
+        {% for child in page.children %}
+          {% assign child_slug = child | slugify %}
+          <li class="list-group-item">
+            <i class="far fa-folder fa-fw"></i>
+            <a href="{{ '/categories/' | append: base_slug | append: '/' | append: child_slug | append: '/' | relative_url }}" class="mx-2">
+              {{ child }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <!-- ── Posts ── -->
+  {% assign show_posts = page.direct_posts | default: page.posts %}
+  {% if show_posts.size > 0 %}
+    <ul class="content ps-0">
+      {% for post in show_posts %}
+        <li class="d-flex justify-content-between px-md-3">
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          <span class="dash flex-grow-1"></span>
+          {% include datetime.html date=post.date class='text-muted small text-nowrap' lang=lang %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 </div>

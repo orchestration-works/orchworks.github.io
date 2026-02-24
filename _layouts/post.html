@@ -126,13 +126,20 @@ script_includes:
   </div>
 
   <div class="post-tail-wrapper text-muted">
-    <!-- categories -->
+    <!-- categories (n-depth breadcrumb) -->
     {% if page.categories.size > 0 %}
       <div class="post-meta mb-3">
         <i class="far fa-folder-open fa-fw me-1"></i>
+        {% assign _cat_slug_accum = '' %}
         {% for category in page.categories %}
-          <a href="{{ site.baseurl }}/categories/{{ category | slugify | url_encode }}/">{{ category }}</a>
-          {%- unless forloop.last -%},{%- endunless -%}
+          {% assign _seg = category | slugify %}
+          {% if _cat_slug_accum == '' %}
+            {% assign _cat_slug_accum = _seg %}
+          {% else %}
+            {% assign _cat_slug_accum = _cat_slug_accum | append: '/' | append: _seg %}
+          {% endif %}
+          <a href="{{ site.baseurl }}/categories/{{ _cat_slug_accum }}/">{{ category }}</a>
+          {%- unless forloop.last %} <i class="fas fa-angle-right fa-fw fa-xs text-muted"></i> {% endunless -%}
         {% endfor %}
       </div>
     {% endif %}

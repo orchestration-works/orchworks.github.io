@@ -221,10 +221,8 @@ exclude:
   - "package*.json"
 
 jekyll-archives:
-  enabled: [categories, tags]
+  enabled: [tags]        # categories are handled by _plugins/category-hierarchy.rb
   layouts:
-    category: category
     tag: tag
   permalinks:
     tag: /tags/:name/
-    category: /categories/:name/
